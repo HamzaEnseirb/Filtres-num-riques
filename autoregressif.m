@@ -1,23 +1,30 @@
-function AR = autoregressif(x0,p,N)
+function [AR,C] = autoregressif(x0,p,N)
     
-    A = randi([0 1],1,p);
-    A = poly(A);
+%     b = 1;
+%     while b > 0
+%         b = 0;
+%         A = abs(randn(1,p));
+%         B = abs(randn(1,p));
+%         for i=1:p
+%             a=abs(A(i)+B(i)*j);
+%             if a > 1 
+%                 b=1;
+%             end
+%         end
+%     end
+%     t = randi([1 10],1,1);
+%     a1 = 0.98*exp(j*(pi/t));
+%     a2 = 0.98*exp(j*(pi/t));
     
-    y = filter(1,A,randn(1,N));
+%     A = [a1,conj(a1),a2,conj(a2)];
+%     C = poly(A);
+%     C = A+B.*j;
+    %A = 0.5*rand(1,p).*exp(-j*pi*rand(1,p))
+    %A = [0.2*exp(-j*(pi/3)) 0.5*exp(-j*(pi/3)) 0.1*exp(j*(pi/3)) 0.8*exp(j*(pi/3))];
+    
+    p1 = 0.98*exp(j*2*pi*(pi/3));
+    p2 = 0.98*exp(-j*2*pi*(pi/3));
 
-    a = aryule(y,p);
-    bbg = randn(1,N);
-    x = zeros(1,N);
-    x(1) = x0;
-    
-    for i=2:N
-        for j=1:p
-            if i>j
-                x(i) = x(i)+a(j+1)*x(i-j);
-            end 
-        end
-        x(i) = x(i)+bbg(i);
-    end
-    AR = x;
-end
-
+    A = [p1 conj(p1) p2 conj(p2)];
+    C = poly(A);
+    AR = filter(1,C,randn(1,N));
